@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/alvaroluna/liri-node-app#readme",
   "dependencies": {
+    "axios": "^0.19.2",
+    "moment": "^2.24.0",
     "spotify": "^0.3.0"
   }
 }
