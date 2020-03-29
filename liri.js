@@ -24,28 +24,28 @@ function API_engine(searchTerm) {
   };
 
   this.bandsInTownAPI = function() {};
-
-  //    error whatever
-  this.error = function() {
-    console.log(
-      "Please specify search term film | song | something | something"
-    );
-  };
 }
 
 function Main() {
-  var search = process.argv[3];
-
   // instantiate API_engine
   var apiObj = new API_engine(search);
 
-  switch (process.argv[2]) {
-    case "film":
-      apiObj.filmAPI();
-    case "music":
-      apiObj.spotifyAPI();
-    case "concert":
-      apiObj.bandsInTownAPI();
+  if (process.argv[2]) {
+    var searchTerm = process.argv.splice(3);
+    var concatinate = searchTerm.join();
+
+    switch (process.argv[3]) {
+      case "film":
+        apiObj.filmAPI();
+      case "music":
+        apiObj.spotifyAPI();
+      case "concert":
+        apiObj.bandsInTownAPI();
+    }
+  } else {
+    console.log(
+      "Provide a search term and select API library (film | song | something | something)"
+    );
   }
 }
 
