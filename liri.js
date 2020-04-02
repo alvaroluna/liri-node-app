@@ -120,7 +120,7 @@ function API_engine() {
         var title = response.data.Title;
         var year = response.data.Year;
         var imbdRating = response.data.imdbRating; // imbd rating
-        var rtRating = response.data.Ratings[1].Value; // rotten tomatoes rating
+        var rtRating = response.data.Ratings.Value; // rotten tomatoes rating
         var country = response.data.Country;
         var language = response.data.Language;
         var plot = WordWrap(response.data.Plot, 60);
@@ -231,14 +231,13 @@ function Main() {
         var results = apiObj.MovieAPI((searchTerm = searchTerm), true);
         break;
       case "spotify-this-song":
-        var results = apiObj.spotifyAPI((searchTerm = searchTerm), false);
+        var results = apiObj.spotifyAPI((searchTerm = searchTerm), true);
         console.log(results);
         break;
       case "concert-this":
         var results = apiObj.BandsInTownAPI((searchTerm = searchTerm), true);
         break;
     }
-    console.log(results);
     // write results to log.txt
     apiObj.WriteLog(results);
   } else {
