@@ -186,26 +186,6 @@ function API_engine() {
       });
   };
 
-  //   do what it says api method
-  this.DoWhatItSays = function(
-    searchTerm = "I Want it That Way",
-    print = true
-  ) {
-    var fs = require("fs");
-
-    axios
-      .get
-      // Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
-      // It should run spotify-this-song for "I Want it That Way," as follows the text in random.txt.
-      // Edit the text in random.txt to test out the feature for movie-this and concert-this.
-      ()
-      .then(function(response) {
-        //  name of the venue
-        //  venue location
-        //  date of the event (use moment to format this as "MM/DD/YYYY")
-      });
-  };
-
   this.WriteLog = function(data) {
     fs.appendFileSync("log.txt", data, function(err) {
       if (err) throw err;
@@ -234,22 +214,31 @@ function Main() {
     var apiObj = new API_engine();
 
     // check which api is chosen through console input by user
+    if (apiChoice === "do-what-it-says") {
+      try {
+        const data = fs.readFileSync("random.txt", "utf8");
+
+        var str = data.split(",");
+        apiChoice = str[0];
+        searchTerm = str[1].replace(/"/g, "");
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     switch (apiChoice) {
       case "movie-this":
-        apiObj.MovieAPI((searchTerm = searchTerm));
+        var results = apiObj.MovieAPI((searchTerm = searchTerm));
         break;
       case "spotify-this-song":
         var results = apiObj.spotifyAPI((searchTerm = searchTerm));
         break;
       case "concert-this":
-        apiObj.BandsInTownAPI((searchTerm = searchTerm));
-        break;
-      case "do-what-it-says":
-        apiObj.DoWhatItSays();
+        var results = apiObj.BandsInTownAPI((searchTerm = searchTerm));
         break;
     }
 
-    console.log(results);
+    // console.log(results);
 
     // write results to log.txt
     apiObj.WriteLog(results);
