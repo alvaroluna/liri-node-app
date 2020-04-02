@@ -51,7 +51,7 @@ function API_engine() {
   this.spotifyAPI = function(searchTerm = "The Sign", print = true) {
     var Spotify = require("node-spotify-api");
     var spotify = new Spotify(keys.spotify); // these objects are chosen as exports explicitly from keys.js
-    var dataOut = [];
+
     spotify.search({ type: "track", query: searchTerm, limit: 5 }, function(
       err,
       data
@@ -60,7 +60,7 @@ function API_engine() {
         console.log("Error occurred: " + err);
         return;
       }
-
+      var dataOut = [];
       // Do something with 'data'
       for (i = 0; i < data.tracks.items.length; i++) {
         // data variables
@@ -80,7 +80,8 @@ function API_engine() {
           "-----------------------------------\n"
         ];
 
-        dataOut.push(tempdata);
+        dataOut.push(JSON.stringify(tempdata));
+        // console.log(tempdata);
 
         if (print) {
           // console print
@@ -103,8 +104,8 @@ function API_engine() {
           }
         }
       }
+      return dataOut;
     });
-    return dataOut;
   };
 
   //    movie api method
@@ -187,9 +188,9 @@ function API_engine() {
   };
 
   this.WriteLog = function(data) {
-    fs.appendFileSync("log.txt", data, function(err) {
+    fs.appendFile("log.txt", data, function(err) {
       if (err) throw err;
-      console.log(showData);
+      console.log("Updated!");
     });
   };
 }
@@ -217,7 +218,6 @@ function Main() {
     if (apiChoice === "do-what-it-says") {
       try {
         const data = fs.readFileSync("random.txt", "utf8");
-
         var str = data.split(",");
         apiChoice = str[0];
         searchTerm = str[1].replace(/"/g, "");
@@ -228,18 +228,17 @@ function Main() {
 
     switch (apiChoice) {
       case "movie-this":
-        var results = apiObj.MovieAPI((searchTerm = searchTerm));
+        var results = apiObj.MovieAPI((searchTerm = searchTerm), true);
         break;
       case "spotify-this-song":
-        var results = apiObj.spotifyAPI((searchTerm = searchTerm));
+        var results = apiObj.spotifyAPI((searchTerm = searchTerm), false);
+        console.log(results);
         break;
       case "concert-this":
-        var results = apiObj.BandsInTownAPI((searchTerm = searchTerm));
+        var results = apiObj.BandsInTownAPI((searchTerm = searchTerm), true);
         break;
     }
-
-    // console.log(results);
-
+    console.log(results);
     // write results to log.txt
     apiObj.WriteLog(results);
   } else {
